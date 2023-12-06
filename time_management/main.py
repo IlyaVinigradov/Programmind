@@ -1,6 +1,7 @@
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
+from add_win import AddWin
 
 
 class MainWin(QWidget):
@@ -48,10 +49,17 @@ class MainWin(QWidget):
 
     def connects(self):
         """ метод для перехода по кнопке к новому экрану """
-        pass
+        # подключение клика по кнопке и переход с помощью функции обработчика на новый экран
+        self.btn_add.clicked.connect(self.move_add)
+
+    def move_add(self):
+        self.hide()
+        self.add = AddWin()
 
 
 app = QApplication([])
 mw = MainWin()
 app.exec()
-# help(MainWin)
+
+# if __name__ == '__main__':
+#     help(MainWin)
