@@ -1,6 +1,8 @@
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
+from controller import Controller
+from model import Model
 
 
 class View(QMainWindow):
@@ -12,9 +14,8 @@ class View(QMainWindow):
         self.main_win = QStackedWidget()
         # сделать main_win главным экраном
         self.setCentralWidget(self.main_win)
-        # self.main_win_ui()
-        self.add_screen_ui()
         self.set_appear()
+        self.main_win_ui()
         self.show()
 
     def set_appear(self):
@@ -24,7 +25,6 @@ class View(QMainWindow):
         # цвет заднего фона
         self.setStyleSheet("background-color: rgb(207, 208, 118)")
         # один метод для размеров экрана и появления в координатах
-        # setGeometry(x, y, width, height)
         self.setGeometry(200, 129, 500, 300)
 
     def main_win_ui(self):
@@ -32,16 +32,19 @@ class View(QMainWindow):
         2 кнопки: добавить/удалить/обновить и посмотреть результат
         """
         self.btn_add = QPushButton('Добавить часы')
+        # переход к новому экрану
+        self.btn_add.clicked.connect(self.add_screen_ui)
         self.btn_show = QPushButton('Показать отработанные часы')
 
         # создание лэйаута (направляющей линии, где будут наши виджеты (кнопки, текст и тд))
         self.layout_widget = QWidget()
-        self.v_layout = QVBoxLayout(self.layout_widget)
+        self.v_layout = QVBoxLayout()
         # добавление виджетов на направляющие линии и расположение
         self.v_layout.addWidget(
             self.btn_add, alignment=Qt.AlignmentFlag.AlignCenter)
         self.v_layout.addWidget(
             self.btn_show, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.layout_widget.setLayout(self.v_layout)
         # добавление виджета на экран
         self.main_win.addWidget(self.layout_widget)
 
@@ -60,7 +63,7 @@ class View(QMainWindow):
         self.cal.setGridVisible(True)
         self.cal.resize(310, 200)
 
-        self.cal.clicked[QDate].connect(self.showDate)
+        # self.cal.clicked[QDate].connect(self.showDate)
         # выбор дня
         self.lbl = QLabel()
         # сообщение для наглядности
@@ -72,11 +75,17 @@ class View(QMainWindow):
         self.btn_save = QPushButton('Сохранить')
         # кнопка назад
         self.btn_back = QPushButton('Назад')
+        self.btn_back.clicked.connect(self.open_main_win)
 
         # лэйаут для расположения виджетов на экране
         self.layout_widget = QWidget()
         self.c_line = QVBoxLayout()
         self.bottom_h_line = QHBoxLayout()
+        self.bottom_h_line.addWidget(
+            self.btn_back, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.bottom_h_line.addWidget(
+            self.btn_save, alignment=Qt.AlignmentFlag.AlignCenter)
+
         self.c_line.addWidget(
             self.input_time, alignment=Qt.AlignmentFlag.AlignCenter)
         self.c_line.addWidget(
@@ -85,13 +94,13 @@ class View(QMainWindow):
         self.c_line.addWidget(self.cal, alignment=Qt.AlignmentFlag.AlignCenter)
         self.c_line.addWidget(
             self.result_label, alignment=Qt.AlignmentFlag.AlignCenter)
-        self.bottom_h_line.addWidget(
-            self.btn_save, alignment=Qt.AlignmentFlag.AlignRight)
-        self.bottom_h_line.addWidget(
-            self.btn_back, alignment=Qt.AlignmentFlag.AlignLeft)
         self.c_line.addLayout(self.bottom_h_line)
         self.layout_widget.setLayout(self.c_line)
         self.main_win.addWidget(self.layout_widget)
+        self.main_win.setCurrentWidget(self.layout_widget)
+
+    def open_main_win(self):
+        self.main_win.setCurrentIndex(0)
 
     # Применение стилей к календарю
     calendar_style = """
@@ -105,6 +114,3 @@ class View(QMainWindow):
             padding: 5px;
         }
     """
-
-    def showDate(self, date):
-        self.lbl.setText(date.toString())
