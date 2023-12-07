@@ -66,7 +66,6 @@ class MainWindow(QMainWindow):
 
         screen1_widget = QWidget()
         screen1_widget.setLayout(screen1_layout)
-
         self.stacked_widget.addWidget(screen1_widget)
 
     def open_screen2(self):

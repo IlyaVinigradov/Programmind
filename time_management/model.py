@@ -4,9 +4,4 @@ from PyQt6.QtWidgets import *
 from view import View
 
 
-app = QApplication([])
-mw = View()
-app.exec()
-
-# if __name__ == '__main__':
-#     help(MainWin)
+class Controller():

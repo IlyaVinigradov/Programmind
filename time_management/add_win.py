@@ -5,7 +5,6 @@ import json
 import os
 from pathlib import Path
 from datetime import datetime
-from main import MainWin
 
 
 # читаем файл
@@ -17,12 +16,13 @@ os.chdir(DIR)  # перейти в папку по пути
 class AddWin(QWidget):
     """ класс - экран по добавлению времени """
 
-    def __init__(self):
+    def __init__(self, main_win):
         """ конструктор для запуска второго окна """
         super().__init__()
         self.set_appear()
         self.initUI()
         self.connects()
+        self.main_win = main_win
         self.show()
 
     def set_appear(self):
@@ -48,7 +48,8 @@ class AddWin(QWidget):
         self.btn_back = QPushButton('Назад')
 
         # лэйаут для расположения виджетов на экране
-        self.c_line = QVBoxLayout()
+        self.layout_widget = QWidget()
+        self.c_line = QVBoxLayout(self.layout_widget)
         self.c_line.addWidget(
             self.label, alignment=Qt.AlignmentFlag.AlignCenter)
         self.c_line.addWidget(
@@ -62,7 +63,7 @@ class AddWin(QWidget):
     def connects(self):
         """ метод нажатие на кнопку т.е. сохранение и назад"""
         self.btn_save.clicked.connect(self.final_move)
-        self.btn_back.clicked.connect(self.back)
+        self.btn_back.clicked.connect(self.go_to_main)
 
     def save(self):
         """ метод записи в json файл """
@@ -88,15 +89,13 @@ class AddWin(QWidget):
         self.done_win.setText('Выполнено')
         self.done_win.exec()
 
-    def back(self):
-        """ переход на предыдущий экран """
-        self.hide()
-        self.main = MainWin()
-
     def final_move(self):
         """ сохранение и оповещение о готовности """
         self.save()
         self.done()
+
+    def go_to_main(self):
+        self.main_win.parent().setCurrentIndex(0)
 
 
 if __name__ == '__main__':
