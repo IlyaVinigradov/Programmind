@@ -50,29 +50,26 @@ class View(QMainWindow):
 
     def add_screen_ui(self):
         """ метод для отображения второго экрана по добавлению времени """
-        # надпись
-        self.input_time = QLabel('Введите время')
-        # поле ввода
-        self.my_time = QSpinBox()
-        # задаю минимальный диапазон
-        self.my_time.setMinimum(0)
         # выбор дня
-        self.day = QLabel('выберите день')
+        self.day = QLabel('Выберите день')
         # календарь
         self.cal = QCalendarWidget()
         self.cal.setGridVisible(True)
         self.cal.resize(310, 200)
+        self.cal.setSizePolicy(QSizePolicy.Policy.Expanding,
+                               QSizePolicy.Policy.Expanding)
+        self.cal.selectionChanged.connect(self.handle_date_selection)
 
-        # self.cal.clicked[QDate].connect(self.showDate)
-        # выбор дня
-        self.lbl = QLabel()
-        # сообщение для наглядности
-        self.result_label = QLabel()
-        self.result_label.setText(
-            f'вы выбрали {self.lbl} и {self.my_time.value()} часов')
+        self.cal.clicked[QDate].connect(Model.showDate)
+
+        self.surname_lbl = QLabel(
+            'Введите фамилии учеников (время можно указать в скобках) через ";"')
+        self.surname = QLineEdit()
+        self.surname.setFixedWidth(300)
 
         # кнопка для сохранения
         self.btn_save = QPushButton('Сохранить')
+        self.btn_save.clicked.connect(Model.done)
         # кнопка назад
         self.btn_back = QPushButton('Назад')
         self.btn_back.clicked.connect(self.open_main_win)
@@ -86,14 +83,12 @@ class View(QMainWindow):
         self.bottom_h_line.addWidget(
             self.btn_save, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        self.c_line.addWidget(
-            self.input_time, alignment=Qt.AlignmentFlag.AlignCenter)
-        self.c_line.addWidget(
-            self.my_time, alignment=Qt.AlignmentFlag.AlignCenter)
         self.c_line.addWidget(self.day, alignment=Qt.AlignmentFlag.AlignCenter)
         self.c_line.addWidget(self.cal, alignment=Qt.AlignmentFlag.AlignCenter)
         self.c_line.addWidget(
-            self.result_label, alignment=Qt.AlignmentFlag.AlignCenter)
+            self.surname_lbl, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.c_line.addWidget(
+            self.surname, alignment=Qt.AlignmentFlag.AlignCenter)
         self.c_line.addLayout(self.bottom_h_line)
         self.layout_widget.setLayout(self.c_line)
         self.main_win.addWidget(self.layout_widget)
@@ -101,6 +96,11 @@ class View(QMainWindow):
 
     def open_main_win(self):
         self.main_win.setCurrentIndex(0)
+
+    def handle_date_selection(self):
+        selected_date = self.cal.selectedDate()
+
+    Controller.handle_date_selected(selected_date)
 
     # Применение стилей к календарю
     calendar_style = """
