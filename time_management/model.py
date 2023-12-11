@@ -28,7 +28,3 @@ class Model(QWidget):
     def set_surname_list(self) -> None:
         self.surname = self.view.surname.text()
         self.surname_list = self.surname.replace(' ', '').split(',')
-
-    def take_info(self):
-        self.set_selected_date()
-        self.set_surname_list()

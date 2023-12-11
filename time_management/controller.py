@@ -3,6 +3,7 @@ from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 import json
 import pprint
+import mysql.connector
 
 
 class Controller:
@@ -12,7 +13,7 @@ class Controller:
 
     def save(self):
         """ метод записи в json файл """
-        self.model.take_info()
+        self.take_info()
         # обработка исключений
         try:
             # открытие файла в режиме чтения
@@ -58,3 +59,10 @@ class Controller:
         """ сохранение и оповещение о готовности """
         self.save()
         self.view.done()
+
+    def take_info(self):
+        self.model.set_selected_date()
+        self.model.set_surname_list()
+
+    def open_main_win(self):
+        self.main_win.setCurrentIndex(0)

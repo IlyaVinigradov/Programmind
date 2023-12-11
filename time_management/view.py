@@ -69,7 +69,7 @@ class View(QMainWindow):
 
         # кнопка назад
         btn_back = QPushButton('Назад')
-        btn_back.clicked.connect(self.open_main_win)
+        btn_back.clicked.connect(self.controller.open_main_win)
 
         # лэйаут для расположения виджетов на экране
         layout_widget = QWidget()
@@ -117,9 +117,6 @@ class View(QMainWindow):
         done_win.setInformativeText(
             f'Дата: {self.model.date_selected}\nУченики: {", ".join(self.model.surname_list)}')
         done_win.exec()
-
-    def open_main_win(self):
-        self.main_win.setCurrentIndex(0)
 
     def set_controller(self, controller: object):
         self.controller = controller
