@@ -1,5 +1,6 @@
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
+from model import Model
 
 
 class Main_Win(QWidget):
@@ -19,6 +20,7 @@ class Main_Win(QWidget):
         # кнопка
         btnres = QPushButton('=')
         btn1 = QPushButton('1')
+        btn1.clicked.connect(Model.num)
         btn2 = QPushButton('2')
         btn3 = QPushButton('3')
         btn4 = QPushButton('4')
